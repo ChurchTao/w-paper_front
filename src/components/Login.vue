@@ -112,6 +112,9 @@ export default{
               message: res.msg,
               type: 'success'
             });
+            t.$cookieTools.setKey('access-token',res.data.token);
+            t.$cookieTools.setKey('user-id',res.data.id);
+            t.$storage.setSession('login-user',res.data);
             t.$router.push({path: '/welcome'});
           }else {
             t.$message.error(res.msg);

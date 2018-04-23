@@ -35,8 +35,30 @@
         </div>
       </div>
       <div class="home-right">
-        <div class="sideblock firstblock">
-          <div class="title">掘金 - juejin.im</div>
+        <div v-show="islogin" class="sideblock firstblock">
+          <div class="title">关于我</div>
+          <el-row type="flex" justify="space-between">
+            <el-col :span="10">
+              <img class="author-img" :src="loginUser==null?'':loginUser.avatar"/>
+            </el-col>
+            <el-col style="margin-top: 5px" :span="10">
+              <div class="author padding1" >
+                {{loginUser==null?'':loginUser.nickname}}
+              </div>
+              <div class="author-info padding1" >
+                {{loginUser==null?'':loginUser.info}}
+              </div></el-col>
+          </el-row>
+          <div style="margin-top: 10px" class="author padding1" >
+            总共被点赞：{{loginUser==null?'':loginUser.likeNum}}
+          </div>
+          <div class="author padding1" >
+            文章被阅读：{{loginUser==null?'':loginUser.likeNum}}
+          </div>
+
+        </div>
+        <div v-show="!islogin" class="sideblock firstblock">
+          <div class="title">w-paper</div>
           <div class="intro">一个帮助开发者成长的社区</div>
           <div class="input-wrapper">
             <input v-model="nickName1" placeholder="昵称" maxlength="20">
@@ -136,7 +158,7 @@ export default {
   name: 'Home',
   data () {
     return {
-      tags:[                {url:'/',name:'架构',id:1},{url:'/',name:'开源',id:2},{url:'/',name:'算法',id:3},{url:'/',name:'GitHub',id:4},{url:'/',name:'面试',id:5},{url:'/',name:'代码规范',id:6},{url:'/',name:'产品',id:7},{url:'/',name:'掘金翻译计划',id:8}
+      tags:[{url:'/',name:'架构',id:1},{url:'/',name:'开源',id:2},{url:'/',name:'算法',id:3},{url:'/',name:'GitHub',id:4},{url:'/',name:'面试',id:5},{url:'/',name:'代码规范',id:6},{url:'/',name:'产品',id:7},{url:'/',name:'掘金翻译计划',id:8}
       ],
       linkout:[      {url:'/#',name:'收藏级',src:'/static/outlink1.png',id:1},{url:'/',name:'下载掘金浏览器插件',src:'/static/outlink2.png',id:2},{url:'/',name:'前往掘金翻译计划',src:'/static/outlink3.png',id:3},{url:'/',name:'商务合作',src:'/static/outlink4.png',id:4}
       ],
@@ -165,7 +187,9 @@ export default {
       colorlist:{frontend:'#56c4e1',backend:'#857dea',ai:'#e8596b',freebie:'#606b9e',article:'#abbb79',ios:'#ff955b',android:'#42c67d'},
       nickName1:"",
       phoneOrEmail1:"",
-      password1:""
+      password1:"",
+      loginUser:{},
+      islogin:{}
     }
   },
   methods:{
@@ -173,14 +197,7 @@ export default {
       return this.entries.filter(v=>v.type==''+thetype);
     },
     submitNow(){
-//      this.$fetch({
-//        url: '/getAllUser',
-//        method: 'get',
-//      }).then(function (res) {
-//        console.log(res)
-//      }).catch(function (err) {
-//
-//      })
+        var t = this;
       this.$fetch({
         url: '/user/init',
         method: 'post',
@@ -190,9 +207,22 @@ export default {
           password : this.password1
         }
       }).then(function (res) {
-        console.log(res.msg)
+        if(res.code===200){
+          t.$message({
+            message: res.msg,
+            type: 'success'
+          });
+          t.$cookieTools.setKey('access-token',res.data.token);
+          t.$cookieTools.setKey('user-id',res.data.id);
+          t.$storage.setSession('login-user',res.data);
+          t.loginUser = res.data;
+          t.islogin = true;
+          t.$router.push({path: '/welcome'});
+        }else {
+          t.$message.error(res.msg);
+        }
       }).catch(function (err) {
-
+        t.$message.error('请求异常，请检查网络！');
       })
     },
     shuffle(a) {
@@ -209,6 +239,8 @@ export default {
   },
   mounted:function(){
     this.recomlist=this.shuffle(this.entries);
+    this.loginUser=this.$storage.getSession('login-user');
+    this.islogin = this.loginUser !== null;
   },
   beforeRouteUpdate(to,from,next){
    if(to.params.type){
@@ -231,7 +263,20 @@ export default {
   display: flex;
   align-items: center;
 }
-
+.author{
+  font-size: 13px;
+}
+.author-info{
+  font-size: 13px;
+  color: #999;
+}
+.padding1{
+  padding: 2px 0;
+}
+.author-img{
+  border-radius: 50%;
+  width: 100%;
+}
 .morecates .lastline .lastline-left {
   display: flex;
 }

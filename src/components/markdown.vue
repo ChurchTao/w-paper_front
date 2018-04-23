@@ -1,7 +1,7 @@
 <template>
     <div class="mdContainer" :class="{ fullPage: fullPageStatus }">
         <div class="navContainer" v-if="navStatus">
-            <div class="nameContainer" v-if="icoStatusP" @click="happyDay">OVEN-mdEditor</div>
+            <div class="nameContainer" v-if="icoStatusP" @click="happyDay">w-paper</div>
             <div class="markContainer">
                 <ul class="markListGroup">
                     <li class="markListItem" @click="addStrong" title="strong"><b>B</b></li>
@@ -252,7 +252,7 @@
                 }
             },
             happyDay:function(){
-                window.open('https://github.com/ovenslove/vue-mdEditor');
+                window.open('https://github.com/ChurchTao/w-paper_front');
             }
         },
         computed: {
