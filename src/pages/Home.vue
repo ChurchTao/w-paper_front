@@ -234,8 +234,43 @@ export default {
         a[j] = x;
       }
       return a;
+    },
+    getEntries(){
+        var t = this;
+      this.$fetch({
+        url: '/post/getHomePost',
+        method: 'get',
+        params: {
+          id:loginUser.id
+        }
+      }).then(function (res) {
+        if(res.code===200){
+          t.entries = res.data;
+        }
+      }).catch(function (err) {
+        console.log('网络异常，获取首页失败！');
+      })
+    },
+    getTypes(){
+      var t = this;
+      this.$fetch({
+        url: '/profession/getByUid',
+        method: 'get',
+        params: {
+          id:loginUser.id
+        }
+      }).then(function (res) {
+        if(res.code===200){
+          t.cate = res.data;
+        }
+      }).catch(function (err) {
+        console.log('网络异常，获取首页失败！');
+      })
     }
 
+  },
+  created:function () {
+    this.getEntries();
   },
   mounted:function(){
     this.recomlist=this.shuffle(this.entries);
