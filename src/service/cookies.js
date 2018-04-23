@@ -11,6 +11,10 @@ var cookieTools = {
     var cookie;
     cookie = Cookies.set(key, value);
     return cookie;
+  },
+
+  clearLogin: function () {
+    Cookies.remove('access-token');
   }
 };
 export default cookieTools;

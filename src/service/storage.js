@@ -43,6 +43,10 @@ var storage = {
     }
     sessionStorage[key] = JSON.stringify(data);
   },
+  removeSession: function (key) {
+    sessionStorage.removeItem(key);
+  }
+  ,
   getCurrentTimeStamp: function() {
     return Date.parse(new Date());
   }

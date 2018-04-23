@@ -4,14 +4,14 @@
       <el-card class="head-box">
         <el-row type="flex" justify="space-between">
           <el-col :span="3">
-            <img class="author-img" src="../assets/logo.png"/>
+            <img class="author-img" :src="loginUser==null?'../assets/logo.png':loginUser.avatar"/>
           </el-col>
           <el-col :span="15" style="margin-left: 30px">
             <div class="title padding1" >
-              作者姓名
+              {{loginUser==null?'':loginUser.nickname}}
             </div>
             <div class="author-info padding1" >
-              作者简介
+              {{loginUser==null?'':loginUser.info}}
             </div>
           </el-col>
           <el-col :span="6" >
@@ -37,13 +37,24 @@
   export default {
     data() {
       return {
-        activeName: '1'
+        activeName: '1',
+        islogin: false,
+        loginUser: {}
       };
     },
     methods: {
       handleClick(tab, event) {
         console.log(tab, event);
       }
+    },
+    mounted(){
+      if (this.$storage.getSession('login-user')==null){
+        this.$message.error('请先登录');
+        this.$router.push({path: '/'});
+        return;
+      }
+      this.loginUser=this.$storage.getSession('login-user');
+      this.islogin = this.loginUser !== null;
     }
   };
 </script>

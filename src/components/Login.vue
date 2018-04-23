@@ -70,7 +70,7 @@ export default{
       this.registershow=true;
     },
     submitInfo(){
-        var t = this;
+      var t = this;
       if (this.isloginwindow){
         this.$fetch({
           url: '/user/login',
@@ -82,15 +82,19 @@ export default{
         }).then(function (res) {
             if(res.code===200){
               t.$emit('closeMask');
-              console.log(res.msg);
-              t.$router.push({path: '/write'});
+              t.$message({
+                message: res.msg,
+                type: 'success'
+              });
+              t.$cookieTools.setKey('access-token',res.data.token);
+              t.$cookieTools.setKey('user-id',res.data.id);
+              t.$storage.setSession('login-user',res.data);
+              t.$router.push({path: '/welcome'});
             }else {
-                alert(res.msg);
+              t.$message.error(res.msg);
             }
-
-
         }).catch(function (err) {
-
+          t.$message.error('请求异常，请检查网络！');
         })
       }else {
         this.$fetch({
@@ -104,17 +108,18 @@ export default{
         }).then(function (res) {
           if(res.code===200){
             t.$emit('closeMask');
-            console.log(res.msg);
-            t.$router.push({path: '/write'});
+            t.$message({
+              message: res.msg,
+              type: 'success'
+            });
+            t.$router.push({path: '/welcome'});
           }else {
-            alert(res.msg);
+            t.$message.error(res.msg);
           }
         }).catch(function (err) {
-
+          t.$message.error('请求异常，请检查网络！');
         })
       }
-
-//      this.$router.push({path: '/write'});
     }
   }
 

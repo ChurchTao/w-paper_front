@@ -26,7 +26,8 @@
                   <router-link to="/write"><button @click="startarticleClose()">开始写文章</button></router-link>
                 </div>
               </li>
-              <li class="login-register"><span class="login" @click="login">登录</span><span @click="register">注册</span></li>
+              <li v-show="islogin"><span class="login" >{{loginUser==null?'':loginUser.nickname}}</span><span @click="logout">退出</span></li>
+              <li class="login-register"><span v-show="!islogin" class="login" @click="login">登录</span><span v-show="!islogin" @click="register">注册</span></li>
             </ul>
           </div>
         </header>
@@ -37,7 +38,7 @@
     </div>
     <panel :isarrow="isarrow" v-on:backtotop="backtotop"></panel>
     <login :isloginwindow="isloginwindow" v-if="loginshow" v-on:closeMask="closeMask"></login>
-    <footer>©2018 掘金</footer>
+    <footer>©2018 w-paper</footer>
 
   </div>
 
@@ -58,7 +59,9 @@
         ifstartarticle: false,
         loginshow: false,
         isloginwindow: true,
-        isarrow: false
+        isarrow: false,
+        islogin: false,
+        loginUser: {},
       }
     },
     methods:{
@@ -95,6 +98,9 @@
           this.ifstartarticle=false;
         }
       },
+      logined(){
+        this.islogin=true;
+      },
       getAllChildren(obj){
         var arr=[];
         (function innerFunction(obj){
@@ -126,6 +132,42 @@
         window.scrollTo(0,0)
         this.headershow=true;
         this.$refs.view.adsshow=false;
+      },
+      logout(){
+        this.$storage.removeSession('login-user');
+        this.$cookieTools.clearLogin();
+        this.islogin=false;
+        this.loginUser={};
+        this.$router.push({path: '/'});
+      },
+      loginByToken(){
+         const token =this.$cookieTools.getKey('access-token');
+         const id = this.$cookieTools.getKey('user-id');
+         var t = this;
+        this.$fetch({
+          url: '/user/loginByToken',
+          method: 'post',
+          data: {
+            token : token,
+            id : id
+          }
+        }).then(function (res) {
+          if(res.code===200){
+            t.$message({
+              message: res.msg,
+              type: 'success'
+            });
+//            t.$cookieTools.setKey('access-token',res.data.token);
+            t.$cookieTools.setKey('user-id',res.data.id);
+            t.$storage.setSession('login-user',res.data);
+            t.loginUser = res.data;
+            t.islogin = true;
+          }else {
+            t.$message.error(res.msg);
+          }
+        }).catch(function (err) {
+          t.$message.error('自动登录异常，请检查网络！');
+        })
       }
 
     },
@@ -139,6 +181,11 @@
     },
     mounted(){
       window.addEventListener('scroll', this.theScroll);
+      if (this.$cookieTools.getKey('access-token')!=null&&this.$storage.getSession('login-user')==null){
+         this.loginByToken();
+      }
+      this.loginUser=this.$storage.getSession('login-user');
+      this.islogin = this.loginUser !== null;
     }
 
   }
