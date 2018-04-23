@@ -1,26 +1,16 @@
 import Cookies from 'js-cookie';
 
-const TokenKey = 'user-location-Token';
-const briefToken = 'location-briefToken';
 
-export function getToken() {
-  return Cookies.get(TokenKey);
-}
+var cookieTools = {
 
-export function setToken(token) {
-  var cookie;
-  cookie = Cookies.set(TokenKey, token);
-  return cookie;
-}
+  getKey: function(key) {
+    return Cookies.get(key);
+  },
 
-export function removeToken() {
-  return Cookies.remove(TokenKey)
-}
-
-export function setBriefToken(token) {
-  return Cookies.set(briefToken, token)
-}
-
-export function getBriefToken() {
-  return Cookies.get(briefToken)
-}
+  setKey: function (key,value) {
+    var cookie;
+    cookie = Cookies.set(key, value);
+    return cookie;
+  }
+};
+export default cookieTools;
