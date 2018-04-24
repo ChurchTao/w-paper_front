@@ -31,12 +31,10 @@ export default new Router({
       component: Write
     },
     {
-      path: '/read',
+      path: '/read/:id',
       name: 'Read',
       component: Read
     },
-
-
     {
       path: '/books',
       name: 'Books',

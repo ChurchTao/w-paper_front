@@ -7,16 +7,16 @@
           <el-row type="flex" justify="space-between">
             <el-col :span="6">
               <div class="text item">
-                文章标题
+                {{postInfo.title}}
               </div>
             </el-col>
             <el-col :span="6">
               <div class="author">
-                作者
+                {{authorInfo.nickname}}
               </div>
               <br/>
               <div class="time">
-                2018-04-21 17:39
+                {{postInfo.createTime}}
               </div>
             </el-col>
           </el-row>
@@ -72,19 +72,19 @@
             </el-col>
             <el-col style="margin-top: 5px" :span="10">
               <div class="author padding1">
-                作者姓名
+                {{authorInfo.nickname}}
               </div>
               <div class="author-info padding1">
-                作者简介
+                {{authorInfo.info}}
               </div>
             </el-col>
           </el-row>
 
           <div class="author padding1">
-            总共被点赞：1.3k
+            总共被点赞：{{authorInfo.likeNum}}
           </div>
           <div class="author padding1">
-            文章被阅读：3.8k
+            文章被阅读：{{authorInfo.readNum}}
           </div>
         </el-card>
         <!--推荐文章-->
@@ -103,25 +103,13 @@
     name: 'Read',
     data() {
       return {
-        markdownText: "# input",
-
+        markdownText: this.postInfo==null?'':this.postInfo.content,
+        postIdNow:0,
         currentPage: 1,// 分页 当前页码
         pageSize: 6,// 分页 单页数量
         total: 0,// 分页 总数
 
         commentList: [
-          {
-            name: 'kaka',
-            response: null,
-            content: 'good',
-            isThumb: false
-          },
-          {
-            name: 'kaka',
-            response: 'saa',
-            content: 'ahsduhiuqwhuiqhiuqhwiwq',
-            isThumb: false
-          },
           {
             name: 'Asura',
             response: null,
@@ -129,7 +117,9 @@
             isThumb: false
           }
         ]
-
+        ,
+        postInfo:{content:''},
+        authorInfo:{},
       }
     },
     components: {
@@ -138,7 +128,53 @@
     methods:{
       handleCurrentChange: function (val) {
 
+      },
+      getPost:function () {
+        let t = this;
+        this.$fetch({
+          url: '/post/getPostById',
+          method: 'get',
+          params: {
+            id: this.postIdNow,
+          }
+        }).then(function (res) {
+          if(res.code===200){
+            t.postInfo = res.data;
+          }
+        }).catch(function (err) {
+          console.log('网络异常，获取失败！');
+        })
+      },
+      getAuthor:function () {
+        this.$fetch({
+          url: '/post/getAuthor',
+          method: 'get',
+          params: {
+            id: this.postIdNow,
+          }
+        }).then(function (res) {
+          if(res.code===200){
+            t.authorInfo = res.data;
+          }
+        }).catch(function (err) {
+          console.log('网络异常，获取失败！');
+        })
       }
+    },
+    created:function () {
+    },
+    mounted:function(){
+    },
+    beforeRouteUpdate(to,from,next){
+      if(to.params.id){
+        this.postIdNow=to.params.id;
+        console.log(to.params.id);
+        this.getPost();
+        this.getAuthor();
+      }else{
+        return;
+      }
+      next();
     }
   }
 </script>

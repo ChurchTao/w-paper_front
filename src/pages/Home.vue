@@ -20,8 +20,8 @@
               </a>
             </div>
           </div>
-          <div v-else class="morecates" @mouseover="sharebutton=true" @mouseleave="sharebutton=false" v-for="item in entrylist">
-            <a>
+          <div v-else class="morecates" @mouseover="sharebutton=true" @mouseleave="sharebutton=false" v-for="item in entries">
+            <a :href="item.href">
               <div>
                 <div class="firstline"><span class="hot" v-if="item.ishot">热</span><span class="specialist" v-if="item.isspecialist">专栏</span><span class="theauthor">{{item.author}}</span><span class="thetime">{{item.time}}</span></div>
                 <div class="catetitle">{{item.title}}</div>
@@ -163,25 +163,10 @@ export default {
       linkout:[      {url:'/#',name:'收藏级',src:'/static/outlink1.png',id:1},{url:'/',name:'下载掘金浏览器插件',src:'/static/outlink2.png',id:2},{url:'/',name:'前往掘金翻译计划',src:'/static/outlink3.png',id:3},{url:'/',name:'商务合作',src:'/static/outlink4.png',id:4}
       ],
       adsshow:false,
-      cate:[        {url:'/',typeName:'推荐',type:'',id:1},{url:'/welcome/frontend',typeName:'前端',type:'frontend',id:2},{url:'/welcome/android',typeName:'Android',type:'android',id:3},{url:'/welcome/backend',typeName:'后端',type:'backend',id:4},{url:'/welcome/ai',typeName:'人工智能',type:'ai',id:5},{url:'/welcome/ios',typeName:'iOS',type:'ios',id:6},{url:'/welcome/freebie',typeName:'工具资源',type:'freebie',id:7},{url:'/welcome/article',typeName:'阅读',type:'article',id:8}
-      ],
+      cate:[],
       sharebutton:false,
       isrecom:true,
-      entries:[
-        {href:'#',title:'我是前端',author:'前端作者A',typeName:'前端',type:'frontend',readingtimes:293,tags:[],like:6,comment:11,ishot:true,isspecialist:true,time:'3天前'},
-        {href:'#',title:'我是前端1',author:'前端作者B',typeName:'前端',type:'frontend',readingtimes:953,tags:[],like:6,comment:11,ishot:false,isspecialist:true,time:'2天前'},
-        {href:'#',title:'我是前端2',author:'前端作者C',typeName:'前端',type:'frontend',readingtimes:295,tags:[],like:6,comment:11,ishot:true,isspecialist:true,time:'1天前'},
-        {href:'#',title:'我是后端',author:'后端作者A',typeName:'后端',type:'backend',readingtimes:23,tags:[],like:16,comment:12,ishot:true,isspecialist:false,time:'13天前'},
-        {href:'#',title:'我是人工智能',author:'人工智能作者A',typeName:'人工智能',type:'ai',readingtimes:2,tags:[],like:26,comment:13,ishot:true,isspecialist:true,time:'23天前'},
-        {href:'#',title:'我是人工智能1',author:'人工智能作者B',typeName:'人工智能',type:'ai',readingtimes:53,tags:[],like:26,comment:13,ishot:false,isspecialist:false,time:'12天前'},
-        {href:'#',title:'我是工具资源',author:'工具资源作者A',typeName:'工具资源',type:'freebie',readingtimes:93,tags:[],like:36,comment:14,ishot:true,isspecialist:true,time:'12天前'},
-        {href:'#',title:'我是阅读',author:'阅读作者A',typeName:'阅读',type:'article',readingtimes:2953,tags:[],like:46,comment:15,ishot:false,isspecialist:false,time:'22天前'},
-        {href:'#',title:'我是iOS',author:'iOS作者A',typeName:'iOS',type:'ios',readingtimes:2953,tags:[],like:56,comment:16,ishot:true,isspecialist:true,time:'23天前'},
-        {href:'#',title:'我是Android',author:'Android作者A',typeName:'Android',type:'android',readingtimes:253,tags:[],like:66,comment:17,ishot:true,isspecialist:true,time:'31天前'},
-        {href:'#',title:'我是Android1',author:'Android作者B',typeName:'Android',type:'android',readingtimes:295,tags:[],like:66,comment:17,ishot:true,isspecialist:false,time:'13天前'},
-        {href:'#',title:'我是Android2',author:'Android作者A',typeName:'Android',type:'android',readingtimes:293,tags:[],like:66,comment:17,ishot:false,isspecialist:true,time:'26天前'},
-        {href:'#',title:'我是Android3',author:'Android作者C',typeName:'Android',type:'android',readingtimes:53,tags:[],like:66,comment:17,ishot:true,isspecialist:false,time:'7天前'},
-      ],
+      entries:[],
       entrylist:[],
       recomlist:[],
       colorlist:{frontend:'#56c4e1',backend:'#857dea',ai:'#e8596b',freebie:'#606b9e',article:'#abbb79',ios:'#ff955b',android:'#42c67d'},
@@ -189,12 +174,48 @@ export default {
       phoneOrEmail1:"",
       password1:"",
       loginUser:{},
-      islogin:{}
+      islogin:{},
+      currentPage: 1,// 分页 当前页码
+      pageSize: 10,// 分页 单页数量
+      total: 0// 分页 总数
     }
   },
   methods:{
     targetList(thetype){
-      return this.entries.filter(v=>v.type==''+thetype);
+      var t = this;
+      this.$fetch({
+        url: '/post/getPostByType',
+        method: 'get',
+        params: {
+          id: this.loginUser.id,
+          typeId: thetype,
+          pageNum: this.currentPage,
+          pageSize: this.pageSize
+        }
+      }).then(function (res) {
+        if(res.code===200){
+          t.entries = res.data;
+        }
+      }).catch(function (err) {
+        console.log('网络异常，获取失败！');
+      })
+    },
+    getHotList(){
+      var t = this;
+      this.$fetch({
+        url: '/post/getHomePost',
+        method: 'get',
+        params: {
+          id: this.loginUser.id
+        }
+      }).then(function (res) {
+        if(res.code===200){
+          t.entries = res.data;
+          t.recomlist = res.data;
+        }
+      }).catch(function (err) {
+        console.log('网络异常，获取首页失败！');
+      })
     },
     submitNow(){
         var t = this;
@@ -235,33 +256,15 @@ export default {
       }
       return a;
     },
-    getEntries(){
-        var t = this;
-      this.$fetch({
-        url: '/post/getHomePost',
-        method: 'get',
-        params: {
-          id:loginUser.id
-        }
-      }).then(function (res) {
-        if(res.code===200){
-          t.entries = res.data;
-        }
-      }).catch(function (err) {
-        console.log('网络异常，获取首页失败！');
-      })
-    },
     getTypes(){
       var t = this;
       this.$fetch({
-        url: '/profession/getByUid',
-        method: 'get',
-        params: {
-          id:loginUser.id
-        }
+        url: '/profession/getByUid?id='+this.loginUser.id,
+        method: 'get'
       }).then(function (res) {
         if(res.code===200){
           t.cate = res.data;
+          t.$storage.setSession('user-cate',res.data);
         }
       }).catch(function (err) {
         console.log('网络异常，获取首页失败！');
@@ -270,20 +273,23 @@ export default {
 
   },
   created:function () {
-    this.getEntries();
+      this.loginUser=this.$storage.getSession('login-user');
+      this.islogin = this.loginUser !== null;
+      this.getTypes();
   },
   mounted:function(){
     this.recomlist=this.shuffle(this.entries);
-    this.loginUser=this.$storage.getSession('login-user');
-    this.islogin = this.loginUser !== null;
+
   },
   beforeRouteUpdate(to,from,next){
    if(to.params.type){
+       console.log(to.params.type);
      this.isrecom=false;
-     this.entrylist=this.targetList(to.params.type);
+     this.targetList(to.params.type);
    }else{
      this.isrecom=true;
-     this.recomlist=this.shuffle(this.entries);
+     this.getHotList();
+//     this.recomlist=this.shuffle(this.entries);
    }
     next();
   }

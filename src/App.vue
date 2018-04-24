@@ -138,7 +138,7 @@
         this.$cookieTools.clearLogin();
         this.islogin=false;
         this.loginUser={};
-        this.$router.push({path: '/'});
+        location.reload();
       },
       loginByToken(){
          const token =this.$cookieTools.getKey('access-token');
@@ -162,6 +162,8 @@
             t.$storage.setSession('login-user',res.data);
             t.loginUser = res.data;
             t.islogin = true;
+            location.reload();
+
           }else {
             t.$message.error(res.msg);
           }
