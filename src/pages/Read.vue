@@ -5,7 +5,7 @@
         <!--标题-->
         <el-card class="box-card">
           <el-row type="flex" justify="space-between">
-            <el-col :span="6">
+            <el-col :span="10">
               <div class="text item">
                 {{postInfo.title}}
               </div>
@@ -16,7 +16,7 @@
               </div>
               <br/>
               <div class="time">
-                {{postInfo.createTime}}
+                {{postInfo.createtime | formatDate}}
               </div>
             </el-col>
           </el-row>
@@ -68,7 +68,7 @@
           </div>
           <el-row type="flex" justify="space-between">
             <el-col :span="10">
-              <img class="author-img" src="../assets/logo.png"/>
+              <img class="author-img" :src="authorInfo.avatar"/>
             </el-col>
             <el-col style="margin-top: 5px" :span="10">
               <div class="author padding1">
@@ -80,11 +80,11 @@
             </el-col>
           </el-row>
 
-          <div class="author padding1">
+          <div style="margin-top: 10px" class="author padding1">
             总共被点赞：{{authorInfo.likeNum}}
           </div>
           <div class="author padding1">
-            文章被阅读：{{authorInfo.readNum}}
+            文章被阅读：{{authorInfo.likeNum}}
           </div>
         </el-card>
         <!--推荐文章-->
@@ -98,12 +98,12 @@
 
 <script>
   import markdownRead from '../components/markdownRead'
-
+  import {formatDate} from '../service/date'
   export default {
     name: 'Read',
     data() {
       return {
-        markdownText: this.postInfo==null?'':this.postInfo.content,
+        markdownText: '# ???',
         postIdNow:0,
         currentPage: 1,// 分页 当前页码
         pageSize: 6,// 分页 单页数量
@@ -118,13 +118,20 @@
           }
         ]
         ,
-        postInfo:{content:''},
+        postInfo:{},
         authorInfo:{},
       }
     },
     components: {
       markdownRead
     },
+    filters:{
+        formatDate(time){
+            let date = new Date(time);
+            return formatDate(date, 'yyyy-MM-dd hh:mm');
+        }
+    }
+    ,
     methods:{
       handleCurrentChange: function (val) {
 
@@ -140,12 +147,14 @@
         }).then(function (res) {
           if(res.code===200){
             t.postInfo = res.data;
+            t.markdownText = res.data.content;
           }
         }).catch(function (err) {
           console.log('网络异常，获取失败！');
         })
       },
       getAuthor:function () {
+          let t = this;
         this.$fetch({
           url: '/post/getAuthor',
           method: 'get',
@@ -162,19 +171,11 @@
       }
     },
     created:function () {
+      this.postIdNow= this.$route.params.id;
+      this.getPost();
+      this.getAuthor();
     },
     mounted:function(){
-    },
-    beforeRouteUpdate(to,from,next){
-      if(to.params.id){
-        this.postIdNow=to.params.id;
-        console.log(to.params.id);
-        this.getPost();
-        this.getAuthor();
-      }else{
-        return;
-      }
-      next();
     }
   }
 </script>

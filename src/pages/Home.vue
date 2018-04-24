@@ -283,13 +283,11 @@ export default {
   },
   beforeRouteUpdate(to,from,next){
    if(to.params.type){
-       console.log(to.params.type);
      this.isrecom=false;
      this.targetList(to.params.type);
    }else{
      this.isrecom=true;
      this.getHotList();
-//     this.recomlist=this.shuffle(this.entries);
    }
     next();
   }
