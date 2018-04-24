@@ -14,7 +14,7 @@
               <a href="#">
                 <div class="textintro">
                   <div class="thetitle">{{item.title}}</div>
-                  <div class="theinfos"><span class="thetype" :style="{backgroundColor:colorlist[item.type]}">{{item.typeName}}</span><span class="theauthor dot">{{item.author}}</span><span class="thetime dot">{{item.time}}</span><span   class="readingtimes">{{item.readingtimes}}</span>次阅读</div>
+                  <div class="theinfos"><span class="thetype" :style="{backgroundColor:colorlist[item.type%7]}">{{item.typeName}}</span><span class="theauthor dot">{{item.author}}</span><span class="thetime dot">{{item.time}}</span><span   class="readingtimes">{{item.readingtimes}}</span>次阅读</div>
                 </div>
                 <div class="picintro"></div>
               </a>
@@ -122,7 +122,7 @@
           </ul>
           <ul>
             <li><a href="#">发现更多</a></li>
-            <li><span>·</span>©2018 掘金</li>
+            <li><span>·</span>©2018 w-paper</li>
           </ul>
         </div>
         <div class="adsfxied" v-show="adsshow">
@@ -158,9 +158,9 @@ export default {
   name: 'Home',
   data () {
     return {
-      tags:[{url:'/',name:'架构',id:1},{url:'/',name:'开源',id:2},{url:'/',name:'算法',id:3},{url:'/',name:'GitHub',id:4},{url:'/',name:'面试',id:5},{url:'/',name:'代码规范',id:6},{url:'/',name:'产品',id:7},{url:'/',name:'掘金翻译计划',id:8}
+      tags:[{url:'/',name:'架构',id:1},{url:'/',name:'开源',id:2},{url:'/',name:'算法',id:3},{url:'/',name:'GitHub',id:4},{url:'/',name:'面试',id:5},{url:'/',name:'代码规范',id:6},{url:'/',name:'产品',id:7}
       ],
-      linkout:[      {url:'/#',name:'收藏级',src:'/static/outlink1.png',id:1},{url:'/',name:'下载掘金浏览器插件',src:'/static/outlink2.png',id:2},{url:'/',name:'前往掘金翻译计划',src:'/static/outlink3.png',id:3},{url:'/',name:'商务合作',src:'/static/outlink4.png',id:4}
+      linkout:[      {url:'/#',name:'收藏级',src:'/static/outlink1.png',id:1},{url:'/',name:'商务合作',src:'/static/outlink4.png',id:4}
       ],
       adsshow:false,
       cate:[],
@@ -169,7 +169,7 @@ export default {
       entries:[],
       entrylist:[],
       recomlist:[],
-      colorlist:{frontend:'#56c4e1',backend:'#857dea',ai:'#e8596b',freebie:'#606b9e',article:'#abbb79',ios:'#ff955b',android:'#42c67d'},
+      colorlist:{1:'#56c4e1',2:'#857dea',3:'#e8596b',4:'#606b9e',5:'#abbb79',6:'#ff955b',7:'#42c67d'},
       nickName1:"",
       phoneOrEmail1:"",
       password1:"",
@@ -276,6 +276,7 @@ export default {
       this.loginUser=this.$storage.getSession('login-user');
       this.islogin = this.loginUser !== null;
       this.getTypes();
+      this.getHotList();
   },
   mounted:function(){
     this.recomlist=this.shuffle(this.entries);

@@ -44,6 +44,11 @@
                     }
                 )
             }
+        },
+        watch: {
+          'dataIn': function() {
+            this.markdownText = this.dataIn;
+          }
         }
     }
 </script>

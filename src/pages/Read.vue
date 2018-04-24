@@ -103,7 +103,6 @@
     name: 'Read',
     data() {
       return {
-        markdownText: '# ???',
         postIdNow:0,
         currentPage: 1,// 分页 当前页码
         pageSize: 6,// 分页 单页数量
@@ -120,6 +119,7 @@
         ,
         postInfo:{},
         authorInfo:{},
+        markdownText: 'loading...'
       }
     },
     components: {
@@ -189,7 +189,7 @@
 
   .post {
     width: 100%;
-    height: 500px;
+    height: 100%;
   }
 
   .read {
