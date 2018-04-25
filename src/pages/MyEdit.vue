@@ -10,7 +10,9 @@
             <el-input v-model="form.name"></el-input>
           </el-form-item>
 
-          <input id="avatar-up" @change="upAvatar()" type="file"/>
+          <el-form-item label="头像上传">
+            <input id="avatar-up" @change="upAvatar()" type="file"/>
+          </el-form-item>
 
           <el-form-item label="性别">
             <el-radio-group v-model="form.gender">
@@ -45,7 +47,7 @@
           name: '',
           avatar: '',//头像
           gender: '',
-          info: ''
+          info: '',
         }
       };
     },
@@ -81,7 +83,7 @@
         }
         uploadQN('avatar-up',option).then(function(res) {
           console.log(res,'success');
-
+          v.form.avatar = res.longUrl;
         }).catch(function(err) {
           console.log(err,'error');
         })

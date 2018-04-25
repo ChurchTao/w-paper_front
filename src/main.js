@@ -10,21 +10,24 @@ import storage from './service/storage.js'
 
 import commentCell from './components/commentCell.vue';
 import tagCell from './components/tagCell.vue';
+
 Vue.component('comment-cell', commentCell);
 Vue.component('tag-cell', tagCell);
 
 
 Vue.prototype.$fetch = fetch;
-Vue.prototype.$storage=storage;
-Vue.prototype.$cookieTools=cookieTools;
+Vue.prototype.$storage = storage;
+Vue.prototype.$cookieTools = cookieTools;
 
 Vue.use(ElementUI);
 Vue.config.productionTip = false;
+
+
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
-  components: { App },
-  template:'<App/>'
+  components: {App},
+  template: '<App/>'
 })

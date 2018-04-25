@@ -37,7 +37,7 @@
           <el-card style="margin-top: 10px;padding: 0" class="box-card">
             <div class="title">{{totalCommentNum}} 条评论</div>
             <div class="comment-wrapper">
-              <comment-cell v-for="(item, index) in commentList" :key="index" :item="item"></comment-cell>
+              <comment-cell v-for="(item, index) in commentList" :key="index" :postId="postIdNow" :item="item"></comment-cell>
             </div>
             <div class="page-box">
               <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize"

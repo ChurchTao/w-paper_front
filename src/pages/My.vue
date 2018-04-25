@@ -58,6 +58,7 @@
       }
       this.loginUser=this.$storage.getSession('login-user');
       this.islogin = this.loginUser !== null;
+      console.log(this.loginUser);
     }
   };
 </script>

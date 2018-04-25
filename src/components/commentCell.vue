@@ -29,7 +29,7 @@
       <el-input :placeholder="'回复' + item.name" size="small" v-model="reply"></el-input>
       <div class="reply-button-wrapper">
         <el-button size="small" class="cancel" type="text" @click="toCancelReply()">取消</el-button>
-        <el-button size="small" type="primary">评论</el-button>
+        <el-button size="small" type="primary" @click="toResponse()">评论</el-button>
       </div>
     </div>
   </div>
@@ -37,24 +37,35 @@
 
 <script>
   import {formatDate} from '../service/date'
+
   export default {
     name: "comment-cell",
     props: {
       item: {
         type: Object,
         default: {}
+      },
+      postId: {
+        type: String,
+        default: ''
       }
     },
     data() {
       return {
         isReplyShow: false,// 是否 显示回复
         reply: null,// 回复内容
+        loginUser: {}
       }
-    },filters:{
-      formatDate(time){
+    },
+    filters: {
+      formatDate(time) {
         let date = new Date(time);
         return formatDate(date, 'yyyy-MM-dd hh:mm');
       }
+    },
+    created: function () {
+      this.loginUser = this.$storage.getSession('login-user');
+      this.islogin = this.loginUser !== null;
     },
     methods: {
       toThumb: function () {
@@ -69,6 +80,35 @@
         // 隐藏 回复框
         this.reply = null;
         this.isReplyShow = !this.isReplyShow;
+      },
+      toResponse: function () {
+        // 回复评论
+        console.log(this.loginUser);
+        let v = this;
+        this.$fetch({
+          url: '/comment/publish',
+          method: 'post',
+          data: {
+            content: this.reply,
+            userId: this.loginUser.id,
+            postId: this.postId,
+            parentId: this.item.userId
+          }
+        }).then(function (res) {
+          if (res.code === 200) {
+            v.$message({
+              message: res.msg,
+              type: 'success'
+            });
+            setTimeout(function () {
+              location.reload();
+            },1000);
+          } else {
+            v.$message.error(res.msg);
+          }
+        }).catch(function (err) {
+
+        })
       }
     }
   }

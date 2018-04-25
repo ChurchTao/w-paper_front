@@ -188,6 +188,11 @@
       }
       this.loginUser=this.$storage.getSession('login-user');
       this.islogin = this.loginUser !== null;
+    },
+    watch: {
+      $route: function (to, from, next) {
+        this.loginByToken();
+      }
     }
 
   }
