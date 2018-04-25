@@ -11,7 +11,7 @@
         <div  class="main-content">
           <div v-if="isrecom">
             <div class="recom" v-for="item in recomlist">
-              <a href="#">
+              <a :href="item.href">
                 <div class="textintro">
                   <div class="thetitle">{{item.title}}</div>
                   <div class="theinfos"><span class="thetype" :style="{backgroundColor:colorlist[item.type%7]}">{{item.typeName}}</span><span class="theauthor dot">{{item.author}}</span><span class="thetime dot">{{item.time}}</span><span   class="readingtimes">{{item.readingtimes}}</span>次阅读</div>
@@ -163,7 +163,12 @@ export default {
       linkout:[      {url:'/#',name:'收藏级',src:'/static/outlink1.png',id:1},{url:'/',name:'商务合作',src:'/static/outlink4.png',id:4}
       ],
       adsshow:false,
-      cate:[],
+      cate:[{
+        "url": "/",
+        "typeName": "推荐",
+        "type": "",
+        "id": 0
+      }],
       sharebutton:false,
       isrecom:true,
       entries:[],
@@ -187,7 +192,7 @@ export default {
         url: '/post/getPostByType',
         method: 'get',
         params: {
-          id: this.loginUser.id,
+          id: 0,
           typeId: thetype,
           pageNum: this.currentPage,
           pageSize: this.pageSize
@@ -206,7 +211,7 @@ export default {
         url: '/post/getHomePost',
         method: 'get',
         params: {
-          id: this.loginUser.id
+          id: 0
         }
       }).then(function (res) {
         if(res.code===200){
@@ -269,13 +274,31 @@ export default {
       }).catch(function (err) {
         console.log('网络异常，获取首页失败！');
       })
+    },
+    getTypesNotLogin(){
+      var t = this;
+      this.$fetch({
+        url: '/profession/getHot',
+        method: 'get'
+      }).then(function (res) {
+        if(res.code===200){
+          t.cate = res.data;
+          t.$storage.setSession('user-cate',res.data);
+        }
+      }).catch(function (err) {
+        console.log('网络异常，获取首页失败！');
+      })
     }
 
   },
   created:function () {
       this.loginUser=this.$storage.getSession('login-user');
       this.islogin = this.loginUser !== null;
-      this.getTypes();
+      if (this.islogin==true){
+        this.getTypes();
+      }else {
+          this.getTypesNotLogin();
+      }
       this.getHotList();
   },
   mounted:function(){

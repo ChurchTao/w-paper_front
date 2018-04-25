@@ -15,7 +15,7 @@
             </div>
           </el-col>
           <el-col :span="6" >
-            <el-button style="float: right" type="text">修改个人信息</el-button>
+            <el-button @click="goEdit" style="float: right" type="text">修改个人信息</el-button>
           </el-col>
         </el-row>
       </el-card>
@@ -45,6 +45,9 @@
     methods: {
       handleClick(tab, event) {
         console.log(tab, event);
+      },
+      goEdit(){
+        this.$router.push({path: '/myedit'});
       }
     },
     mounted(){

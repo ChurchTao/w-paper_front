@@ -2,13 +2,15 @@ import fetch from './fetch.js'
 import axios from 'axios'
 
 /*
- 封装的QN上传方法
- 依赖： axios，
- 外使用需要 去除axios依赖，并进行es6解构
+ * 我的 七牛url：http://p7mnquexm.bkt.clouddn.com/
+ * 我的 七牛Key：uySX174_v5dYdzu0rwMcroHZd2AX0dkWGy09MU4B   	AccessKey
+ *             f-4zRJDtjybxtLTBVisvkjHVg9JbwuI2zoyYoY1i     SecretKey
+ *
+ *             你看着用
  * */
 //七牛
 export function uploadQN(dom,o) {
-	var domain = 'http://oxpaw4p8c.bkt.clouddn.com/'
+	var domain = 'http://p7mnquexm.bkt.clouddn.com/'
 	return new Promise(function(resolve, reject) {
 		getQNUploadToken(dom,o).then(function(res) {
 			resolve({shortUrl:res.data.key,longUrl:domain+res.data.key})
@@ -48,7 +50,7 @@ export function getQNUploadToken(dom,o) {
 					reject({code:-2})
 					return
 				}
-				
+
 			}else if(o.type) {
 				//仅仅规定了 类型
 				if(o.type.indexOf(file.type)==-1){
@@ -70,7 +72,7 @@ export function getQNUploadToken(dom,o) {
 				let tokenParem = {
 					'putPolicy': '{\"name\":\"$(fname)\",\"size\":\"$(fsize)\",\"w\":\"$(imageInfo.width)\",\"h\":\"$(imageInfo.height)\",\"hash\":\"$(etag)\"}',
 					'key': 'orderReview/' + d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate() + '/' + d.valueOf() + '.' + type[type.length - 1],
-					'bucket': 'http://oxpaw4p8c.bkt.clouddn.com', //七牛的地址，这个是你自己配置的（变量）
+					'bucket': 'http://p7mnquexm.bkt.clouddn.com', //七牛的地址，这个是你自己配置的（变量）
 				};
 				let param = new FormData(); //创建form对象
 				param.append('token', res.data.uptoken);
@@ -113,10 +115,10 @@ export function getQNUploadToken(dom,o) {
 //					shortUrl:result.name,
 //					longUrl:result.url
 //				})
-//		     }).catch(function (err) {  
-//		       console.log(err);  
+//		     }).catch(function (err) {
+//		       console.log(err);
 //		       reject(err)
-//		     });  
+//		     });
 //		}).catch(function(err) {
 //
 //		})

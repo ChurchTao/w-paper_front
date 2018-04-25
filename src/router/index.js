@@ -6,6 +6,7 @@ import Repos from '@/pages/repos'
 import My from '@/pages/my'
 import Write from '@/pages/write'
 import Read from '@/pages/read'
+import MyEdit from '@/pages/myedit'
 
 
 Vue.use(Router)
@@ -49,6 +50,11 @@ export default new Router({
       path: '/my/:city',
       name: 'My',
       component: My
+    },
+    {
+      path: '/myedit',
+      name: 'MyEdit',
+      component:MyEdit
     },
 
   ]
