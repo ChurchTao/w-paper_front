@@ -66,7 +66,7 @@
           }
         }).then(function (res) {
           if (res.code === 200) {
-            t.$router.push({path: '/my'});
+            t.$router.push({path: '/my/all'});
           } else {
             t.$message.error(res.msg);
           }

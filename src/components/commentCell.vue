@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="content">
-      <p>{{item.content}}</p>
+      <p style="margin-left: 15px">{{item.content}}</p>
     </div>
     <div class="bottom-wrapper" v-if="!isReplyShow">
       <button @click="toThumb()">

@@ -153,16 +153,10 @@
           }
         }).then(function (res) {
           if(res.code===200){
-            t.$message({
-              message: res.msg,
-              type: 'success'
-            });
-//            t.$cookieTools.setKey('access-token',res.data.token);
-            t.$cookieTools.setKey('user-id',res.data.id);
+            t.$cookieTools.setKey('access-token',res.data.token);
             t.$storage.setSession('login-user',res.data);
             t.loginUser = res.data;
             t.islogin = true;
-            location.reload();
 
           }else {
             t.$message.error(res.msg);
@@ -181,13 +175,15 @@
         return this.$route.path.indexOf('welcome')!=-1;
       }
     },
-    mounted(){
-      window.addEventListener('scroll', this.theScroll);
+    created(){
       if (this.$cookieTools.getKey('access-token')!=null&&this.$storage.getSession('login-user')==null){
-         this.loginByToken();
+        this.loginByToken();
       }
       this.loginUser=this.$storage.getSession('login-user');
       this.islogin = this.loginUser !== null;
+    },
+    mounted(){
+      window.addEventListener('scroll', this.theScroll);
     },
     watch: {
       $route: function (to, from, next) {

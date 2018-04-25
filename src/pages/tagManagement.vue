@@ -16,11 +16,20 @@
     data() {
       return {}
     },
+    created:function () {
+      this.getTags();
+    }
+    ,
     mounted: function () {
       // let w = window.innerHeight;
       // this.$refs.tagManagement.style.minHeight = w + 'px';
     },
-    methods: {}
+    methods: {
+        getTags:function () {
+
+        }
+
+    }
   }
 </script>
 
