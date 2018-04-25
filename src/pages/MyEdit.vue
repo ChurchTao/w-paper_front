@@ -40,6 +40,7 @@
         loginUser: {},
         form: {
           name: '',
+          avatar:'',//头像
           gender: '',
           info: ''
         }
@@ -47,7 +48,35 @@
     },
     methods: {
       onSubmit() {
-        console.log('submit!');
+        var t = this;
+        this.$fetch({
+          url: '/user/update',
+          method: 'post',
+          data: {
+            nickname : this.form.name,
+            gender : this.form.gender,
+            info : this.form.info,
+            avatar : this.form.avatar,
+            id : this.loginUser.id
+          }
+        }).then(function (res) {
+          if(res.code===200){
+            t.$message({
+              message: res.msg,
+              type: 'success'
+            });
+            t.$cookieTools.setKey('access-token',res.data.token);
+            t.$cookieTools.setKey('user-id',res.data.id);
+            t.$storage.setSession('login-user',res.data);
+            t.loginUser = res.data;
+            t.islogin = true;
+            t.$router.push({path: '/welcome'});
+          }else {
+            t.$message.error(res.msg);
+          }
+        }).catch(function (err) {
+          t.$message.error('请求异常，请检查网络！');
+        })
       },
       uploadHead:function () {
 
@@ -67,6 +96,7 @@
           this.form.info=this.loginUser.info;
           let gender = this.loginUser.gender==0?'女':'男';
           this.form.gender = gender;
+          this.form.avatar = this.loginUser.avatar;
       }
 
     }
