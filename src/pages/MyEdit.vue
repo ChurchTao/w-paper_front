@@ -61,16 +61,7 @@
           }
         }).then(function (res) {
           if(res.code===200){
-            t.$message({
-              message: res.msg,
-              type: 'success'
-            });
-            t.$cookieTools.setKey('access-token',res.data.token);
-            t.$cookieTools.setKey('user-id',res.data.id);
-            t.$storage.setSession('login-user',res.data);
-            t.loginUser = res.data;
-            t.islogin = true;
-            t.$router.push({path: '/welcome'});
+            t.$router.push({path: '/my'});
           }else {
             t.$message.error(res.msg);
           }
