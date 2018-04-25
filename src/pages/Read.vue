@@ -35,7 +35,7 @@
         <!--评论-->
         <div class="comment-main">
           <el-card style="margin-top: 10px;padding: 0" class="box-card">
-            <div class="title">154 条评论</div>
+            <div class="title">{{totalCommentNum}} 条评论</div>
             <div class="comment-wrapper">
               <comment-cell v-for="(item, index) in commentList" :key="index" :item="item"></comment-cell>
             </div>
@@ -48,8 +48,8 @@
             <div class="comment-wrapper">
               <div class="send-title">发表评论</div>
               <div class="send-comment">
-                <el-input size="small" placeholder="请写下你的评论..."></el-input>
-                <el-button size="small">发表</el-button>
+                <el-input v-model="commentinput" size="small" placeholder="请写下你的评论..."></el-input>
+                <el-button @click="publishComment" size="small">发表</el-button>
               </div>
             </div>
             <div class="">
@@ -107,16 +107,11 @@
         currentPage: 1,// 分页 当前页码
         pageSize: 6,// 分页 单页数量
         total: 0,// 分页 总数
-
-        commentList: [
-          {
-            name: 'Asura',
-            response: null,
-            content: '本回答经许可转载的只有4人，其余都是违规未经授权转载的。',
-            isThumb: false
-          }
-        ]
-        ,
+        totalCommentNum:0,
+        loginUser: {},
+        islogin:false,
+        commentinput:'',
+        commentList: [],
         postInfo:{},
         authorInfo:{},
         markdownText: 'loading...'
@@ -134,7 +129,8 @@
     ,
     methods:{
       handleCurrentChange: function (val) {
-
+          this.currentPage=val;
+          this.getComment();
       },
       getPost:function () {
         let t = this;
@@ -148,6 +144,42 @@
           if(res.code===200){
             t.postInfo = res.data;
             t.markdownText = res.data.content;
+          }
+        }).catch(function (err) {
+          console.log('网络异常，获取失败！');
+        })
+      },
+      getCommentCount:function () {
+        let t = this;
+        this.$fetch({
+          url: '/comment/countComment',
+          method: 'get',
+          params: {
+            postId: this.postIdNow,
+          }
+        }).then(function (res) {
+          if(res.code===200){
+            let commentNum = res.data;
+            t.totalCommentNum=res.data;
+            t.total = res.data;
+          }
+        }).catch(function (err) {
+          console.log('网络异常，获取失败！');
+        })
+      },
+      getComment:function () {
+        let t = this;
+        this.$fetch({
+          url: '/comment/getByPostId',
+          method: 'get',
+          params: {
+            postId: this.postIdNow,
+            pageNum: this.currentPage,
+            pageSize: this.pageSize
+          }
+        }).then(function (res) {
+          if(res.code===200){
+            t.commentList = res.data;
           }
         }).catch(function (err) {
           console.log('网络异常，获取失败！');
@@ -168,12 +200,50 @@
         }).catch(function (err) {
           console.log('网络异常，获取失败！');
         })
+      },
+      publishComment:function () {
+          if (this.islogin==false){
+            this.$message.error('请先登录');
+            return;
+          }
+          if (this.commentinput==''||this.commentinput==null){
+            this.$message.error('回复内容不能为空~');
+            return;
+          }
+        var t = this;
+        this.$fetch({
+          url: '/comment/publish',
+          method: 'post',
+          data: {
+            content : this.commentinput,
+            userId : this.loginUser.id,
+            postId : this.postIdNow,
+            parentId: 0
+          }
+        }).then(function (res) {
+          if(res.code===200){
+            t.$message({
+              message: res.msg,
+              type: 'success'
+            });
+            location.reload();
+          }else {
+            t.$message.error(res.msg);
+          }
+        }).catch(function (err) {
+          t.$message.error('请求异常，请检查网络！');
+        })
       }
+
     },
     created:function () {
       this.postIdNow= this.$route.params.id;
+      this.loginUser=this.$storage.getSession('login-user');
+      this.islogin = this.loginUser !== null;
       this.getPost();
       this.getAuthor();
+      this.getCommentCount();
+      this.getComment();
     },
     mounted:function(){
     }

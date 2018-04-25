@@ -2,13 +2,13 @@
   <div class="commentCell-wrapper">
     <div class="first-row">
       <div class="left">
-        <img src="../../static/outlink1.png"/>
+        <img :src="item.avatar"/>
         <span>{{item.name}}</span>
         <span v-if="item.response" class="response">回复</span>
         <span v-if="item.response">{{item.response}}</span>
       </div>
       <div class="right">
-        <span>10 天前</span>
+        <span>{{item.time | formatDate}}</span>
       </div>
     </div>
     <div class="content">
@@ -36,6 +36,7 @@
 </template>
 
 <script>
+  import {formatDate} from '../service/date'
   export default {
     name: "comment-cell",
     props: {
@@ -48,6 +49,11 @@
       return {
         isReplyShow: false,// 是否 显示回复
         reply: null,// 回复内容
+      }
+    },filters:{
+      formatDate(time){
+        let date = new Date(time);
+        return formatDate(date, 'yyyy-MM-dd hh:mm');
       }
     },
     methods: {
