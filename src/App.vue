@@ -4,7 +4,7 @@
       <div class="header-container" v-show="headershow">
         <header>
           <div class="header-inner">
-            <router-link to="/"><img src="./assets/images/logo.svg"/></router-link>
+            <router-link to="/"><img src="../static/logo.png"/></router-link>
             <ul>
               <li>
                 <ul>
@@ -317,6 +317,10 @@
     margin: 0 auto;
     align-items: center;
     justify-content: space-between;
+  }
+
+  .header-inner img{
+    height: 60px;
   }
 
   header ul {
