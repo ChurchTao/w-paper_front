@@ -73,7 +73,7 @@
           <div class="thirdpartylogin">第三方登陆：<img src="../assets/images/weibo.svg"/><img src="../assets/images/github.svg"/><img src="../assets/images/wechat.svg"/></div>
         </div>
         <div class="sideblock secondblock">
-          <div class="hottag"><span>热门标签</span><a>查看全部</a></div>
+          <div class="hottag"><span>热门标签</span><router-link to="/tagManagement">查看全部</router-link></div>
           <div class="tagslist">
             <router-link :to="tag.url" :key="tag.id" target="_blank" v-for="tag in tags">{{tag.name}}</router-link>
           </div>

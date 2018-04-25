@@ -8,8 +8,10 @@ import 'element-ui/lib/theme-chalk/index.css'
 import cookieTools from './service/cookies.js'
 import storage from './service/storage.js'
 
-import commentCell from './components/commentCell.vue'
+import commentCell from './components/commentCell.vue';
+import tagCell from './components/tagCell.vue';
 Vue.component('comment-cell', commentCell);
+Vue.component('tag-cell', tagCell);
 
 
 Vue.prototype.$fetch = fetch;

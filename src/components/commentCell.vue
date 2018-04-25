@@ -117,12 +117,14 @@
       padding: 10px 0;
     }
     .bottom-wrapper {
+      line-height: 20px;
       button {
         font-size: 14px;
         color: rgba(0, 0, 0, 0.6);
         padding: 0 5px;
         box-sizing: border-box;
         margin-right: 5px;
+        background: transparent;
         i {
           font-size: 14px;
         }

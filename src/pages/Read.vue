@@ -49,7 +49,7 @@
               <div class="send-title">发表评论</div>
               <div class="send-comment">
                 <el-input size="small" placeholder="请写下你的评论..."></el-input>
-                <el-button>发表</el-button>
+                <el-button size="small">发表</el-button>
               </div>
             </div>
             <div class="">
