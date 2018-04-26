@@ -1,27 +1,77 @@
 <template>
   <div class="tag-cell">
     <div>
-      <img src="../../static/outlink1.png"/>
+      <img :src="item.avatar"/>
     </div>
     <div class="name">
-      Redis
+      {{item.name}}
     </div>
     <div>
-      <span>367 关注</span>
-      <span>730 文章</span>
+      <span>{{item.starnum}} 关注</span>
+      <span>{{item.postnum}} 文章</span>
     </div>
     <div>
-      <div class="button-wrapper">
+      <el-button @click="changeFocus" v-show="item.focus" type="success">
         已关注
-      </div>
+      </el-button>
+      <el-button @click="changeFocus" v-show="!item.focus" type="info">
+        未关注
+      </el-button>
     </div>
   </div>
 </template>
 
 <script>
+  import ElButton from "../../node_modules/element-ui/packages/button/src/button";
   export default {
+    components: {ElButton},
     name: "tag-cell",
-    props: {}
+    props: {
+      item: {
+        type: Object,
+        default: {}
+      }
+    },
+    data() {
+      return {
+        loginUser: {}
+      }
+    },methods:{
+      changeFocus:function () {
+        let t= this;
+        let status=1;
+        if (this.item.focus==true){
+            status=0;
+        }
+        this.$fetch({
+          url: '/profession/changeFocus',
+          method: 'post',
+          data: {
+            tagId : this.item.id,
+            status : status,
+            userId: this.loginUser.id,
+          }
+        }).then(function (res) {
+          if(res.code===200){
+            t.$message({
+              message: '修改成功',
+              type: 'success'
+            });
+          }else {
+            t.$message.error(res.msg);
+          }
+        }).catch(function (err) {
+          t.$message.error('请求异常，请检查网络！');
+        });
+        this.item.focus=!this.item.focus;
+
+      }
+    },
+    created: function () {
+      this.loginUser = this.$storage.getSession('login-user');
+      let user = this.$storage.getSession('login-user');
+      this.islogin = this.loginUser !== null;
+    }
   }
 </script>
 

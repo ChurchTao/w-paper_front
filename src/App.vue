@@ -10,7 +10,7 @@
                 <ul>
                   <li><router-link to="/" exact :class="{linkactive:ifhomeactive}">首页</router-link></li>
                   <li class="books"><router-link to="/books">专辑</router-link></li>
-                  <li><router-link to="/repos">收藏</router-link></li>
+                  <li><router-link to="/tagManagement">标签管理</router-link></li>
                   <li><router-link to="/my/all">我的主页</router-link></li>
                 </ul>
               </li>
@@ -140,7 +140,7 @@
         this.loginUser={};
         location.reload();
       },
-      loginByToken(){
+      loginByToken(isFirst){
          const token =this.$cookieTools.getKey('access-token');
          const id = this.$cookieTools.getKey('user-id');
          var t = this;
@@ -157,7 +157,9 @@
             t.$storage.setSession('login-user',res.data);
             t.loginUser = res.data;
             t.islogin = true;
-
+            if (isFirst){
+                location.reload();
+            }
           }else {
             t.$message.error(res.msg);
           }
@@ -177,7 +179,7 @@
     },
     created(){
       if (this.$cookieTools.getKey('access-token')!=null&&this.$storage.getSession('login-user')==null){
-        this.loginByToken();
+        this.loginByToken(true);
       }
       this.loginUser=this.$storage.getSession('login-user');
       this.islogin = this.loginUser !== null;
@@ -187,7 +189,7 @@
     },
     watch: {
       $route: function (to, from, next) {
-        this.loginByToken();
+        this.loginByToken(false);
       }
     }
 

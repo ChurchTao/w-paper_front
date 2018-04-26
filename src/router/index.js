@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/pages/home'
 import Books from '@/pages/books'
-import Repos from '@/pages/repos'
 import My from '@/pages/my'
 import Write from '@/pages/write'
 import Read from '@/pages/read'
@@ -41,11 +40,6 @@ export default new Router({
       path: '/books',
       name: 'Books',
       component: Books
-    },
-    {
-      path: '/repos',
-      name: 'Repos',
-      component: Repos
     },
     {
       path: '/my/:city',

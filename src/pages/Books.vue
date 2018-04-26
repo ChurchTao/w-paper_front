@@ -15,7 +15,7 @@
       <div class="books-right">
         <div class="books-right-inner">
           <div class="sidebar">
-            <p class="title">掘金小册是什么？</p>
+            <p class="title">小册是什么？</p>
             <p class="desc">一个小篇幅、高浓度、成体系、有收益的技术学习平台</p>
           </div>
           <div class="codebar"></div>
@@ -114,7 +114,7 @@ export default {
   flex-grow: 1;
 }
 
-.books-right {  
+.books-right {
   width: 240px;
   margin-left: 20px;
   position: relative;

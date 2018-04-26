@@ -9,7 +9,7 @@
     <div class="contactwindow" v-show="windowshow">
       <h1><span class="title">给我们留言</span><i class="icon iconfont icon-jiantouxia closearrow" @click="closecontact"></i></h1>
       <div class="content">
-        <p>hello，有什么需要帮助的么？欢迎您的留言，我们之后会回复您，请耐心等待。亲爱的小伙伴，现在文章可以批量导入啦，点进写文章，然后点击头像，下方会出现批量导入功能，期待您的文章入驻掘金～</p>
+        <p>hello，有什么需要帮助的么？欢迎您的留言，我们之后会回复您，请耐心等待。亲爱的小伙伴，现在文章可以批量导入啦，点进写文章，然后点击头像，下方会出现批量导入功能，期待您的文章入驻～</p>
         <div>
           <span>邮箱</span>
           <input placeholder="请输入邮箱">

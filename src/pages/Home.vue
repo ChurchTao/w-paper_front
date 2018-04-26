@@ -81,7 +81,7 @@
         <div class="sideblock thirdblock">
           <img src="../assets/images/download.png">
           <div class="desc">
-            <h1>下载掘金客户端</h1>
+            <h1>下载客户端</h1>
             <div>一个帮助开发者成长的社区</div>
           </div>
         </div>
@@ -142,7 +142,7 @@
           <div class="sideblock thirdblock">
             <img src="../assets/images/download.png">
             <div class="desc">
-              <h1>下载掘金客户端</h1>
+              <h1>下载客户端</h1>
               <div>一个帮助开发者成长的社区</div>
             </div>
           </div>
@@ -174,7 +174,7 @@ export default {
       entries:[],
       entrylist:[],
       recomlist:[],
-      colorlist:{1:'#56c4e1',2:'#857dea',3:'#e8596b',4:'#606b9e',5:'#abbb79',6:'#ff955b',7:'#42c67d'},
+      colorlist:{0:'#42c67d',1:'#56c4e1',2:'#857dea',3:'#e8596b',4:'#606b9e',5:'#abbb79',6:'#ff955b',7:'#508bc6'},
       nickName1:"",
       phoneOrEmail1:"",
       password1:"",

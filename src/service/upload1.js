@@ -5,7 +5,7 @@ import axios from 'axios'
  * 我的 七牛url：http://p7mnquexm.bkt.clouddn.com/
  * 我的 七牛Key：uySX174_v5dYdzu0rwMcroHZd2AX0dkWGy09MU4B   	AccessKey
  *             f-4zRJDtjybxtLTBVisvkjHVg9JbwuI2zoyYoY1i     SecretKey
- *
+ *   pscp w-paper_war.war root@120.79.207.154:/usr/java/new
  *             你看着用
  * */
 

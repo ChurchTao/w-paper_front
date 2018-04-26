@@ -1,11 +1,8 @@
 <template>
   <div class="tag-management" ref="tagManagement">
     <div class="tag-wrapper">
-      <tag-cell></tag-cell>
-      <tag-cell></tag-cell>
-      <tag-cell></tag-cell>
-      <tag-cell></tag-cell>
-      <tag-cell></tag-cell>
+      <tag-cell v-for="(item, index) in tagList" :key="index"  :item="item"></tag-cell>
+
     </div>
   </div>
 </template>
@@ -14,9 +11,17 @@
   export default {
     name: "tag-management",
     data() {
-      return {}
+      return {
+          tagList:[
+          ]
+          ,
+        loginUser:{},
+        islogin:false
+      }
     },
     created:function () {
+      this.loginUser = this.$storage.getSession('login-user');
+      this.islogin = this.loginUser !== null;
       this.getTags();
     }
     ,
@@ -26,7 +31,20 @@
     },
     methods: {
         getTags:function () {
-
+          let t = this;
+          this.$fetch({
+            url: '/profession/getTags',
+            method: 'get',
+            params: {
+              userId: this.loginUser.id,
+            }
+          }).then(function (res) {
+            if(res.code===200){
+              t.tagList = res.data;
+            }
+          }).catch(function (err) {
+            console.log('网络异常，获取失败！');
+          })
         }
 
     }

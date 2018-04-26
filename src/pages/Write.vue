@@ -104,7 +104,7 @@
             userId: this.loginUser.id,
             userName: this.loginUser.nickname,
             kind: selectedId,
-            kindName: this.options[selectedId-1].label,
+            kindName: this.options[selectedId].label,
           }
         }).then(function (res) {
           if(res.code===200){

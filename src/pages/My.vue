@@ -21,11 +21,47 @@
       </el-card>
 
       <el-tabs class="pane" v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="文章" name="1">文章</el-tab-pane>
-        <el-tab-pane label="专辑" name="2">专辑</el-tab-pane>
-        <el-tab-pane label="点赞" name="3">点赞</el-tab-pane>
-        <el-tab-pane label="评论" name="4">评论</el-tab-pane>
-        <el-tab-pane label="收藏" name="5">收藏</el-tab-pane>
+        <el-tab-pane label="文章" name="1"><div class="recom" v-for="item in posts">
+          <a :href="item.href">
+            <div class="textintro">
+              <div class="thetitle">{{item.title}}</div>
+              <div class="theinfos"><span class="thetype" :style="{backgroundColor:colorlist[item.type%7]}">{{item.typeName}}</span><span class="theauthor dot">{{item.author}}</span><span class="thetime dot">{{item.time}}</span><span   class="readingtimes">{{item.readingtimes}}</span>次阅读</div>
+            </div>
+            <div class="picintro"></div>
+          </a>
+        </div></el-tab-pane>
+        <el-tab-pane label="专辑" name="2">暂无</el-tab-pane>
+        <el-tab-pane label="点赞" name="3"><div class="recom" v-for="item in liked">
+          <a :href="item.href">
+            <div class="textintro">
+              <div class="thetitle">{{item.title}}</div>
+              <div class="theinfos"><span class="thetype" :style="{backgroundColor:colorlist[item.type%7]}">{{item.typeName}}</span><span class="theauthor dot">{{item.author}}</span><span class="thetime dot">{{item.time}}</span><span   class="readingtimes">{{item.readingtimes}}</span>次阅读</div>
+            </div>
+            <div class="picintro"></div>
+          </a>
+        </div></el-tab-pane>
+        <el-tab-pane label="评论" name="4">
+          <div class="recom" v-for="item in comments">
+          <a :href="item.href">
+            <div class="textintro">
+              <div class="thetitle">{{item.title}}</div>
+              <div class="theinfos"><span class="thetype" :style="{backgroundColor:colorlist[item.type%7]}">{{item.typeName}}</span><span class="theauthor dot">{{item.author}}</span><span class="thetime dot">{{item.time}}</span><span   class="readingtimes">{{item.readingtimes}}</span>次阅读</div>
+            </div>
+            <div class="picintro"></div>
+          </a>
+        </div>
+        </el-tab-pane>
+        <el-tab-pane label="收藏" name="5">
+          <div class="recom" v-for="item in collections">
+            <a :href="item.href">
+              <div class="textintro">
+                <div class="thetitle">{{item.title}}</div>
+                <div class="theinfos"><span class="thetype" :style="{backgroundColor:colorlist[item.type%7]}">{{item.typeName}}</span><span class="theauthor dot">{{item.author}}</span><span class="thetime dot">{{item.time}}</span><span   class="readingtimes">{{item.readingtimes}}</span>次阅读</div>
+              </div>
+              <div class="picintro"></div>
+            </a>
+          </div>
+        </el-tab-pane>
       </el-tabs>
     </div>
   </div>
@@ -39,7 +75,44 @@
       return {
         activeName: '1',
         islogin: false,
-        loginUser: {}
+        loginUser: {},
+        collections:[{
+            href:'#',
+            title:"标题党",
+            type:11,
+            typeName:'android',
+          author:'church',
+          time:'2014-12-12',
+          readingtimes:'11'
+        }],
+        comments:[{
+          href:'#',
+          title:"标题党",
+          type:11,
+          typeName:'android',
+          author:'church',
+          time:'2014-12-12',
+          readingtimes:'11'
+        }],
+        liked:[{
+          href:'#',
+          title:"标题党",
+          type:11,
+          typeName:'android',
+          author:'church',
+          time:'2014-12-12',
+          readingtimes:'11'
+        }],
+        posts:[{
+          href:'#',
+          title:"标题党",
+          type:11,
+          typeName:'android',
+          author:'church',
+          time:'2014-12-12',
+          readingtimes:'11'
+        }],
+        colorlist:{0:'#42c67d',1:'#56c4e1',2:'#857dea',3:'#e8596b',4:'#606b9e',5:'#abbb79',6:'#ff955b',7:'#508bc6'},
       };
     },
     methods: {
@@ -48,7 +121,31 @@
       },
       goEdit(){
         this.$router.push({path: '/myedit'});
+      },
+      getHotList(){
+        var t = this;
+        this.$fetch({
+          url: '/post/getHomePost',
+          method: 'get',
+          params: {
+            id: 0
+          }
+        }).then(function (res) {
+          if(res.code===200){
+            t.collections = res.data;
+            t.posts = res.data;
+            t.liked = res.data;
+            t.comments = res.data;
+          }
+        }).catch(function (err) {
+          console.log('网络异常，获取首页失败！');
+        })
       }
+    },
+    created(){
+      this.loginUser=this.$storage.getSession('login-user');
+      this.islogin = this.loginUser !== null;
+      this.getHotList();
     },
     mounted(){
       if (this.$storage.getSession('login-user')==null){
@@ -56,9 +153,7 @@
         this.$router.push({path: '/'});
         return;
       }
-      this.loginUser=this.$storage.getSession('login-user');
-      this.islogin = this.loginUser !== null;
-      console.log(this.loginUser);
+
     }
   };
 </script>
@@ -94,4 +189,64 @@
   .pane{
     margin-top: 5px;
   }
+
+  .picintro {
+    width: 8.9rem;
+    height: 5.75rem;
+    background-color: #fff;
+    border-radius: 2px;
+    //background-image: url();
+    background-size: cover;
+  }
+
+  .thetitle {
+    font-size: 1.4rem;
+    font-weight: 600;
+    line-height: 1.2;
+    color: #2e3135;
+    margin: .5rem 0 .8rem;
+  }
+
+  .thetitle:hover {
+    text-decoration: underline;
+  }
+
+  .theinfos {
+    font-size: 1rem;
+    color: #8f969c;
+  }
+
+  .thetype {
+    display: inline-block;
+    margin-right: 1.2rem;
+    padding: .38rem 0;
+    min-width: 4.5rem;
+    text-align: center;
+    line-height: 1;
+    color: #fff;
+    border-radius: 2px;
+  }
+  .recom a{
+    display: flex;
+    align-items: center;
+    padding: 1.167rem 2rem;
+    min-height: 5.75rem;
+    justify-content: space-between;
+    border-bottom: 1px solid #f6f6f6;
+    cursor: pointer;
+  }
+
+  .recom:hover {
+    background-color: rgba(0,0,0,.01);
+  }
+  .recom{
+    background-color: white;
+    border: 1px solid rgba(142, 142, 142, 0.2);;
+  }
+  .dot:after {
+    content: "\B7";
+    margin: 0 .4em;
+    color: #b2bac2;
+  }
+
 </style>
