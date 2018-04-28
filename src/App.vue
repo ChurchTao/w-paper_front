@@ -10,7 +10,7 @@
                 <ul>
                   <li><router-link to="/" exact :class="{linkactive:ifhomeactive}">首页</router-link></li>
                   <li class="books"><router-link to="/books">专辑</router-link></li>
-                  <li v-show="islogin"><router-link to="/tagManagement">标签管理</router-link></li>
+                  <li v-show="islogin"><router-link to="/tagManagement">版块管理</router-link></li>
                   <li v-show="islogin"><router-link to="/my/all">我的主页</router-link></li>
                 </ul>
               </li>
@@ -191,7 +191,9 @@
     },
     watch: {
       $route: function (to, from, next) {
-        this.loginByToken(false);
+          if(this.$cookieTools.getKey('access-token')!=null){
+            this.loginByToken(false);
+          }
       }
     }
 

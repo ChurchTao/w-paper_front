@@ -56,6 +56,7 @@
         msg: {
           mdValue:''
         },
+        cate:[],
         options: [],
         selectedOptions: []
       }
@@ -82,15 +83,28 @@
         this.dilogStatus=false;
       },
       getTypes:function () {
-        const cate = this.$storage.getSession('user-cate');
-        let options = [];
-        for (let i=0;i<cate.length;i++){
-            let option = {};
-            option.value=cate[i].id;
-            option.label=cate[i].typeName;
-            options.push(option);
-        }
-        this.options=options;
+
+        var t = this;
+        this.$fetch({
+          url: '/profession/getHot',
+          method: 'get'
+        }).then(function (res) {
+          if(res.code===200){
+            t.cate = res.data;
+            t.$storage.setSession('user-cate',res.data);
+            const cate = t.$storage.getSession('user-cate');
+            let options = [];
+            for (let i=0;i<cate.length;i++){
+              let option = {};
+              option.value=cate[i].id;
+              option.label=cate[i].typeName;
+              options.push(option);
+            }
+            t.options=options;
+          }
+        }).catch(function (err) {
+          console.log('网络异常，获取首页失败！');
+        })
       },
       submitPost:function () {
         let selectedId=this.selectedOptions[0];

@@ -7,6 +7,7 @@ import Write from '@/pages/write'
 import Read from '@/pages/read'
 import MyEdit from '@/pages/myedit'
 import tagManagement from '@/pages/tagManagement'
+import NewTag from '@/pages/NewTag'
 
 
 Vue.use(Router)
@@ -50,6 +51,11 @@ export default new Router({
       path: '/myedit',
       name: 'MyEdit',
       component:MyEdit
+    },
+    {
+      path: '/newtag',
+      name: 'NewTag',
+      component:NewTag
     },
     {
       path: '/tagManagement',
