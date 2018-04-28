@@ -126,6 +126,10 @@
       this.getTypes();
     },
     mounted:function(){
+      if (this.loginUser == null) {
+        this.$message.error('请先登录');
+        this.$router.push({path: '/'});
+      }
     }
   }
 </script>

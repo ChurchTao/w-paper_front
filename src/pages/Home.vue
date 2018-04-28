@@ -11,17 +11,17 @@
         <div  class="main-content">
           <div v-if="isrecom">
             <div class="recom" v-for="item in recomlist">
-              <a :href="item.href">
+              <router-link :to="item.href">
                 <div class="textintro">
                   <div class="thetitle">{{item.title}}</div>
                   <div class="theinfos"><span class="thetype" :style="{backgroundColor:colorlist[item.type%7]}">{{item.typeName}}</span><span class="theauthor dot">{{item.author}}</span><span class="thetime dot">{{item.time}}</span><span   class="readingtimes">{{item.readingtimes}}</span>次阅读</div>
                 </div>
                 <div class="picintro"></div>
-              </a>
+              </router-link>
             </div>
           </div>
           <div v-else class="morecates" @mouseover="sharebutton=true" @mouseleave="sharebutton=false" v-for="item in entries">
-            <a :href="item.href">
+            <router-link :to="item.href">
               <div>
                 <div class="firstline"><span class="hot" v-if="item.ishot">热</span><span class="specialist" v-if="item.isspecialist">专栏</span><span class="theauthor">{{item.author}}</span><span class="thetime">{{item.time}}</span></div>
                 <div class="catetitle">{{item.title}}</div>
@@ -30,7 +30,7 @@
                   <div class="lastline-right" v-show="sharebutton"><span><img src="../assets/images/share.svg"></span><span><img src="../assets/images/favourite.svg"></span></div></div>
               </div>
                 <div class="picintro"></div>
-            </a>
+            </router-link>
           </div>
         </div>
       </div>

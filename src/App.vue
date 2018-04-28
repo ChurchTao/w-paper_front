@@ -10,8 +10,8 @@
                 <ul>
                   <li><router-link to="/" exact :class="{linkactive:ifhomeactive}">首页</router-link></li>
                   <li class="books"><router-link to="/books">专辑</router-link></li>
-                  <li><router-link to="/tagManagement">标签管理</router-link></li>
-                  <li><router-link to="/my/all">我的主页</router-link></li>
+                  <li v-show="islogin"><router-link to="/tagManagement">标签管理</router-link></li>
+                  <li v-show="islogin"><router-link to="/my/all">我的主页</router-link></li>
                 </ul>
               </li>
               <li class="search"><form><input placeholder="搜索"><img src="./assets/images/search.svg"/></form></li>
@@ -164,7 +164,9 @@
             t.$message.error(res.msg);
           }
         }).catch(function (err) {
-          t.$message.error('自动登录异常，请检查网络！');
+          if (isFirst) {
+            t.$message.error('自动登录异常，请检查网络！');
+          }
         })
       }
 

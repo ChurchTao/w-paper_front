@@ -22,44 +22,44 @@
 
       <el-tabs class="pane" v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="文章" name="1"><div class="recom" v-for="item in posts">
-          <a :href="item.href">
+          <router-link :to="item.href">
             <div class="textintro">
               <div class="thetitle">{{item.title}}</div>
               <div class="theinfos"><span class="thetype" :style="{backgroundColor:colorlist[item.type%7]}">{{item.typeName}}</span><span class="theauthor dot">{{item.author}}</span><span class="thetime dot">{{item.time}}</span><span   class="readingtimes">{{item.readingtimes}}</span>次阅读</div>
             </div>
             <div class="picintro"></div>
-          </a>
+          </router-link>
         </div></el-tab-pane>
         <el-tab-pane label="专辑" name="2">暂无</el-tab-pane>
         <el-tab-pane label="点赞" name="3"><div class="recom" v-for="item in liked">
-          <a :href="item.href">
+          <router-link :to="item.href">
             <div class="textintro">
               <div class="thetitle">{{item.title}}</div>
               <div class="theinfos"><span class="thetype" :style="{backgroundColor:colorlist[item.type%7]}">{{item.typeName}}</span><span class="theauthor dot">{{item.author}}</span><span class="thetime dot">{{item.time}}</span><span   class="readingtimes">{{item.readingtimes}}</span>次阅读</div>
             </div>
             <div class="picintro"></div>
-          </a>
+          </router-link>
         </div></el-tab-pane>
         <el-tab-pane label="评论" name="4">
           <div class="recom" v-for="item in comments">
-          <a :href="item.href">
+            <router-link :to="item.href">
             <div class="textintro">
               <div class="thetitle">{{item.title}}</div>
               <div class="theinfos"><span class="thetype" :style="{backgroundColor:colorlist[item.type%7]}">{{item.typeName}}</span><span class="theauthor dot">{{item.author}}</span><span class="thetime dot">{{item.time}}</span><span   class="readingtimes">{{item.readingtimes}}</span>次阅读</div>
             </div>
             <div class="picintro"></div>
-          </a>
+            </router-link>
         </div>
         </el-tab-pane>
         <el-tab-pane label="收藏" name="5">
           <div class="recom" v-for="item in collections">
-            <a :href="item.href">
+            <router-link :to="item.href">
               <div class="textintro">
                 <div class="thetitle">{{item.title}}</div>
                 <div class="theinfos"><span class="thetype" :style="{backgroundColor:colorlist[item.type%7]}">{{item.typeName}}</span><span class="theauthor dot">{{item.author}}</span><span class="thetime dot">{{item.time}}</span><span   class="readingtimes">{{item.readingtimes}}</span>次阅读</div>
               </div>
               <div class="picintro"></div>
-            </a>
+            </router-link>
           </div>
         </el-tab-pane>
       </el-tabs>
