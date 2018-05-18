@@ -140,6 +140,29 @@
         this.loginUser={};
         location.reload();
       },
+      getUserInfo(){
+        const token =this.$cookieTools.getKey('access-token');
+        const id = this.$cookieTools.getKey('user-id');
+        var t = this;
+        this.$fetch({
+          url: '/user/getUserInfo',
+          method: 'post',
+          data: {
+            token : token,
+            id : id
+          }
+        }).then(function (res) {
+          if(res.code===200){
+            t.$cookieTools.setKey('access-token',res.data.token);
+            t.$storage.setSession('login-user',res.data);
+            t.loginUser = res.data;
+            t.islogin = true;
+          }else {
+            t.$message.error(res.msg);
+          }
+        }).catch(function (err) {
+        })
+      },
       loginByToken(isFirst){
          const token =this.$cookieTools.getKey('access-token');
          const id = this.$cookieTools.getKey('user-id');
@@ -192,7 +215,7 @@
     watch: {
       $route: function (to, from, next) {
           if(this.$cookieTools.getKey('access-token')!=null){
-            this.loginByToken(false);
+            this.getUserInfo();
           }
       }
     }
