@@ -88,9 +88,15 @@
           </div>
         </el-card>
         <!--推荐文章-->
-
+        <el-card class="box-card" v-show="isManager">
+          <div slot="header">
+            <span>管理工具</span>
+          </div>
+          <el-button @click="delPost" type="text">删除该文章</el-button>
+        </el-card>
       </el-col>
     </el-row>
+
 
 
   </div>
@@ -99,6 +105,7 @@
 <script>
   import markdownRead from '../components/markdownRead'
   import {formatDate} from '../service/date'
+  import ElButton from "../../node_modules/element-ui/packages/button/src/button";
   export default {
     name: 'Read',
     data() {
@@ -114,10 +121,12 @@
         commentList: [],
         postInfo:{},
         authorInfo:{},
-        markdownText: 'loading...'
+        markdownText: 'loading...',
+        isManager:false
       }
     },
     components: {
+      ElButton,
       markdownRead
     },
     filters:{
@@ -144,6 +153,22 @@
           if(res.code===200){
             t.postInfo = res.data;
             t.markdownText = res.data.content;
+          }
+        }).catch(function (err) {
+          console.log('网络异常，获取失败！');
+        })
+      },
+      delPost:function () {
+        let t = this;
+        this.$fetch({
+          url: '/post/del',
+          method: 'get',
+          params: {
+            postId: this.postIdNow,
+          }
+        }).then(function (res) {
+          if(res.code===200){
+            this.$router.push({path: '/'});
           }
         }).catch(function (err) {
           console.log('网络异常，获取失败！');
@@ -196,6 +221,9 @@
         }).then(function (res) {
           if(res.code===200){
             t.authorInfo = res.data;
+            if (t.authorInfo.id==t.loginUser.id){
+              t.isManager=true;
+            }
           }
         }).catch(function (err) {
           console.log('网络异常，获取失败！');
