@@ -32,6 +32,12 @@
                 <div class="picintro"></div>
             </router-link>
           </div>
+          <div class="page-box">
+            <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize"
+                           layout="total, prev, pager, next, jumper,slot" :total="total">
+              <button style="cursor: pointer;color: white">GO</button>
+            </el-pagination>
+          </div>
         </div>
       </div>
       <div class="home-right">
@@ -169,6 +175,7 @@ export default {
         "type": "",
         "id": 0
       }],
+      typeNow: 0,
       sharebutton:false,
       isrecom:true,
       entries:[],
@@ -186,6 +193,10 @@ export default {
     }
   },
   methods:{
+    handleCurrentChange: function (val) {
+      this.currentPage=val;
+      this.targetList(this.typeNow);
+    },
     targetList(thetype){
       var t = this;
       this.$fetch({
@@ -220,6 +231,21 @@ export default {
         }
       }).catch(function (err) {
         console.log('网络异常，获取首页失败！');
+      })
+    },getCount:function (type) {
+      let t = this;
+      this.$fetch({
+        url: '/post/countByType',
+        method: 'get',
+        params: {
+          type: type
+        }
+      }).then(function (res) {
+        if(res.code===200){
+          t.total = res.data;
+        }
+      }).catch(function (err) {
+        console.log('网络异常，获取失败！');
       })
     },
     submitNow(){
@@ -308,6 +334,8 @@ export default {
   beforeRouteUpdate(to,from,next){
    if(to.params.type){
      this.isrecom=false;
+     this.typeNow=to.params.type;
+     this.getCount(to.params.type);
      this.targetList(to.params.type);
    }else{
      this.isrecom=true;
@@ -343,7 +371,10 @@ export default {
 .morecates .lastline .lastline-left {
   display: flex;
 }
-
+.page-box{
+  text-align: center;
+  padding: 10px 0;
+}
 .morecates .lastline .lastline-right {
   margin-left: .8rem;
   display: flex;

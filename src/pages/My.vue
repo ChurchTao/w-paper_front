@@ -29,7 +29,14 @@
             </div>
             <div class="picintro"></div>
           </router-link>
-        </div></el-tab-pane>
+        </div>
+          <div class="page-box">
+            <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize"
+                           layout="total, prev, pager, next, jumper,slot" :total="total">
+              <button style="cursor: pointer;color: white">GO</button>
+            </el-pagination>
+          </div>
+        </el-tab-pane>
         <el-tab-pane label="专辑" name="2">暂无</el-tab-pane>
         <el-tab-pane label="点赞" name="3"><div class="recom" v-for="item in liked">
           <router-link :to="item.href">
@@ -39,7 +46,14 @@
             </div>
             <div class="picintro"></div>
           </router-link>
-        </div></el-tab-pane>
+        </div>
+          <div class="page-box">
+            <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize"
+                           layout="total, prev, pager, next, jumper,slot" :total="total">
+              <button style="cursor: pointer;color: white">GO</button>
+            </el-pagination>
+          </div>
+        </el-tab-pane>
         <el-tab-pane label="评论" name="4">
           <div class="recom" v-for="item in comments">
             <router-link :to="item.href">
@@ -50,6 +64,12 @@
             <div class="picintro"></div>
             </router-link>
         </div>
+          <div class="page-box">
+            <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize"
+                           layout="total, prev, pager, next, jumper,slot" :total="total">
+              <button style="cursor: pointer;color: white">GO</button>
+            </el-pagination>
+          </div>
         </el-tab-pane>
         <el-tab-pane label="收藏" name="5">
           <div class="recom" v-for="item in collections">
@@ -60,6 +80,12 @@
               </div>
               <div class="picintro"></div>
             </router-link>
+          </div>
+          <div class="page-box">
+            <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize"
+                           layout="total, prev, pager, next, jumper,slot" :total="total">
+              <button style="cursor: pointer;color: white">GO</button>
+            </el-pagination>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -74,6 +100,9 @@
     data() {
       return {
         activeName: '1',
+        currentPage: 1,// 分页 当前页码
+        pageSize: 10,// 分页 单页数量
+        total: 0,// 分页 总数
         islogin: false,
         loginUser: {},
         collections:[{
@@ -116,19 +145,45 @@
       };
     },
     methods: {
+      handleCurrentChange: function (val) {
+        this.currentPage=val;
+        this.getUserPosts();
+      },
+      getCount:function (type) {
+        let t = this;
+        this.$fetch({
+          url: '/post/countPost',
+          method: 'get',
+          params: {
+            uid: this.loginUser.id,
+            type: type
+          }
+        }).then(function (res) {
+          if(res.code===200){
+            t.total = res.data;
+          }
+        }).catch(function (err) {
+          console.log('网络异常，获取失败！');
+        })
+      },
       handleClick(tab, event) {
         console.log(tab, event);
+        this.currentPage=1;
+        this.getCount(1);
+        this.getUserPosts();
       },
       goEdit(){
         this.$router.push({path: '/myedit'});
       },
-      getHotList(){
+      getUserPosts(){
         var t = this;
         this.$fetch({
-          url: '/post/getHomePost',
+          url: '/post/getUserPost',
           method: 'get',
           params: {
-            id: 0
+            id: this.loginUser.id,
+            pageNum: this.currentPage,
+            pageSize: this.pageSize
           }
         }).then(function (res) {
           if(res.code===200){
@@ -145,7 +200,8 @@
     created(){
       this.loginUser=this.$storage.getSession('login-user');
       this.islogin = this.loginUser !== null;
-      this.getHotList();
+      this.getCount(1);
+      this.getUserPosts();
     },
     mounted(){
       if (this.$storage.getSession('login-user')==null){
@@ -198,7 +254,10 @@
     //background-image: url();
     background-size: cover;
   }
-
+  .page-box{
+    text-align: center;
+    padding: 10px 0;
+  }
   .thetitle {
     font-size: 1.4rem;
     font-weight: 600;
