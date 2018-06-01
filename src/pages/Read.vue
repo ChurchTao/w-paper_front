@@ -174,24 +174,6 @@
           console.log('网络异常，获取失败！');
         })
       },
-      getCommentCount:function () {
-        let t = this;
-        this.$fetch({
-          url: '/comment/countComment',
-          method: 'get',
-          params: {
-            postId: this.postIdNow,
-          }
-        }).then(function (res) {
-          if(res.code===200){
-            let commentNum = res.data;
-            t.totalCommentNum=res.data;
-            t.total = res.data;
-          }
-        }).catch(function (err) {
-          console.log('网络异常，获取失败！');
-        })
-      },
       getComment:function () {
         let t = this;
         this.$fetch({
@@ -199,12 +181,14 @@
           method: 'get',
           params: {
             postId: this.postIdNow,
-            pageNum: this.currentPage,
+            pageNum: this.currentPage-1,
             pageSize: this.pageSize
           }
         }).then(function (res) {
           if(res.code===200){
-            t.commentList = res.data;
+            t.commentList = res.data.data;
+            t.totalCommentNum=res.data.total;
+            t.total = res.data.total;
           }
         }).catch(function (err) {
           console.log('网络异常，获取失败！');
@@ -270,7 +254,6 @@
       this.islogin = this.loginUser !== null;
       this.getPost();
       this.getAuthor();
-      this.getCommentCount();
       this.getComment();
     },
     mounted:function(){

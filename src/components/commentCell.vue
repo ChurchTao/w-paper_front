@@ -84,6 +84,10 @@
       toResponse: function () {
         // 回复评论
         console.log(this.loginUser);
+        if(this.loginUser==null){
+          this.$message.error('请先登录');
+            return;
+        }
         let v = this;
         this.$fetch({
           url: '/comment/publish',

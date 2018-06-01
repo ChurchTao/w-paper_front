@@ -205,12 +205,13 @@ export default {
         params: {
           id: 0,
           typeId: thetype,
-          pageNum: this.currentPage,
+          pageNum: this.currentPage-1,
           pageSize: this.pageSize
         }
       }).then(function (res) {
         if(res.code===200){
-          t.entries = res.data;
+          t.total = res.data.total;
+          t.entries = res.data.data;
         }
       }).catch(function (err) {
         console.log('网络异常，获取失败！');
@@ -226,26 +227,11 @@ export default {
         }
       }).then(function (res) {
         if(res.code===200){
-          t.entries = res.data;
-          t.recomlist = res.data;
+          t.entries = res.data.data;
+          t.recomlist = res.data.data;
         }
       }).catch(function (err) {
         console.log('网络异常，获取首页失败！');
-      })
-    },getCount:function (type) {
-      let t = this;
-      this.$fetch({
-        url: '/post/countByType',
-        method: 'get',
-        params: {
-          type: type
-        }
-      }).then(function (res) {
-        if(res.code===200){
-          t.total = res.data;
-        }
-      }).catch(function (err) {
-        console.log('网络异常，获取失败！');
       })
     },
     submitNow(){
@@ -335,7 +321,6 @@ export default {
    if(to.params.type){
      this.isrecom=false;
      this.typeNow=to.params.type;
-     this.getCount(to.params.type);
      this.targetList(to.params.type);
    }else{
      this.isrecom=true;
