@@ -105,42 +105,10 @@
         total: 0,// 分页 总数
         islogin: false,
         loginUser: {},
-        collections:[{
-            href:'#',
-            title:"标题党",
-            type:11,
-            typeName:'android',
-          author:'church',
-          time:'2014-12-12',
-          readingtimes:'11'
-        }],
-        comments:[{
-          href:'#',
-          title:"标题党",
-          type:11,
-          typeName:'android',
-          author:'church',
-          time:'2014-12-12',
-          readingtimes:'11'
-        }],
-        liked:[{
-          href:'#',
-          title:"标题党",
-          type:11,
-          typeName:'android',
-          author:'church',
-          time:'2014-12-12',
-          readingtimes:'11'
-        }],
-        posts:[{
-          href:'#',
-          title:"标题党",
-          type:11,
-          typeName:'android',
-          author:'church',
-          time:'2014-12-12',
-          readingtimes:'11'
-        }],
+        collections:[],
+        comments:[],
+        liked:[],
+        posts:[],
         colorlist:{0:'#42c67d',1:'#56c4e1',2:'#857dea',3:'#e8596b',4:'#606b9e',5:'#abbb79',6:'#ff955b',7:'#508bc6'},
       };
     },
@@ -149,27 +117,9 @@
         this.currentPage=val;
         this.getUserPosts();
       },
-      getCount:function (type) {
-        let t = this;
-        this.$fetch({
-          url: '/post/countPost',
-          method: 'get',
-          params: {
-            uid: this.loginUser.id,
-            type: type
-          }
-        }).then(function (res) {
-          if(res.code===200){
-            t.total = res.data;
-          }
-        }).catch(function (err) {
-          console.log('网络异常，获取失败！');
-        })
-      },
       handleClick(tab, event) {
         console.log(tab, event);
         this.currentPage=1;
-        this.getCount(1);
         this.getUserPosts();
       },
       goEdit(){
@@ -182,15 +132,16 @@
           method: 'get',
           params: {
             id: this.loginUser.id,
-            pageNum: this.currentPage,
+            pageNum: this.currentPage-1,
             pageSize: this.pageSize
           }
         }).then(function (res) {
           if(res.code===200){
-            t.collections = res.data;
-            t.posts = res.data;
-            t.liked = res.data;
-            t.comments = res.data;
+            t.collections = res.data.data;
+            t.posts = res.data.data;
+            t.liked = res.data.data;
+            t.comments = res.data.data;
+            t.total = res.data.total;
           }
         }).catch(function (err) {
           console.log('网络异常，获取首页失败！');
@@ -200,7 +151,6 @@
     created(){
       this.loginUser=this.$storage.getSession('login-user');
       this.islogin = this.loginUser !== null;
-      this.getCount(1);
       this.getUserPosts();
     },
     mounted(){
