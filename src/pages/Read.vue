@@ -16,7 +16,7 @@
               </div>
               <br/>
               <div class="time">
-                {{postInfo.createtime | formatDate}}
+                {{postInfo.createTime | formatDate}}
               </div>
             </el-col>
           </el-row>

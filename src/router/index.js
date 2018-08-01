@@ -1,13 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/pages/home'
-import Books from '@/pages/books'
-import My from '@/pages/my'
-import Write from '@/pages/write'
-import Read from '@/pages/read'
-import MyEdit from '@/pages/myedit'
-import tagManagement from '@/pages/tagManagement'
-import NewTag from '@/pages/NewTag'
+import Home from '../pages/Home'
+import Books from '../pages/Books'
+import My from '../pages/My'
+import Write from '../pages/Write'
+import Read from '../pages/Read'
+import MyEdit from '../pages/MyEdit'
+import tagManagement from '../pages/tagManagement'
+import NewTag from '../pages/NewTag'
 
 
 Vue.use(Router)
